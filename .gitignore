@@ -1,0 +1,20 @@
+# Dữ liệu sinh ra khi chạy (cache / trạng thái / nhật ký)
+scripts/ff_cache.json
+scripts/ff_reminded.json
+scripts/xau_state.json
+scripts/sell_override.json
+scripts/xau_journal.csv
+scripts/xau_snapshots.csv
+scripts/xau_report.off
+
+# Python
+__pycache__/
+*.pyc
+mt5env/
+.venv/
+venv/
+
+# Bí mật / cấu hình thật
+.env
+*.key
+cron/jobs.json

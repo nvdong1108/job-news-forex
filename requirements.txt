@@ -1,0 +1,4 @@
+# Chỉ cần cho xau_engine.py (đọc MT5). ff_calendar.py chỉ dùng thư viện chuẩn.
+MetaTrader5==5.0.6231
+numpy==2.5.4
+pandas==3.0.6

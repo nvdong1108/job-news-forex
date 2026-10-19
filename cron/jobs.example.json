@@ -1,0 +1,62 @@
+{
+  "jobs": [
+    {
+      "id": "8cb371bc66b5",
+      "name": "Vàng - báo sáng 7h (ForexFactory)",
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 7 * * *",
+        "display": "every day at 7am"
+      },
+      "enabled": true,
+      "script": "ff_today.py",
+      "no_agent": false,
+      "deliver": "origin,telegram:<ALERT_XAU_TEST_CHAT_ID>,telegram:<KAIROS_LIVE_CHAT_ID>",
+      "prompt": "Ban la bot bao tin VANG. Du lieu duy nhat la output cua script phia tren (lich ForexFactory, gio da doi san sang gio Viet Nam, chi gom tin USD High/Medium hom nay). KHONG dung nguon nao khac, KHONG tu doi gio, KHONG fetch web, KHONG bia tin. KHONG dua bat ky link/URL nao vao tin nhan.\n\nViet tieng Viet. Dong dau: TIN VANG HOM NAY (ngay dd/mm/yyyy - gio VN).\nMoi tin giu nguyen dong cua script (gio + icon vuong + ten + Du bao + Truoc). Sau moi tin (hoac sau cum tin cung gio) them 1 dong bat dau bang icon robot: AI du doan: Vang co the TANG/GIAM manh/nhe + 1 cau ly do. Logic: so lieu forecast tot hon previous cho USD (vd CPI/PPI/Retail cao hon, Claims thap hon) = USD manh = vang giam, nguoc lai thi vang tang; tin phat bieu (Speaks) = canh bao bien dong manh 2 chieu. Nhieu tin cung gio thi nhan dinh chung 1 lan.\nCuoi: 1 dong tong nhan dinh, roi dong 'Khong phai khuyen nghi dau tu.', roi DONG CUOI CUNG dung nguyen van: 'Nguon tin tuc: ForexFactory' (viet co dau: Nguồn tin tức: ForexFactory; khong them .com, khong link).\nNeu script bao So tin: 0 -> chi gui: 'Hom nay khong co tin USD Do/Cam.' + disclaimer + dong 'Nguồn tin tức: ForexFactory'.\nNeu script bao LOI -> gui: 'Khong tai duoc lich tin sang nay.' + dong 'Nguồn tin tức: ForexFactory'."
+    },
+    {
+      "id": "61ba07235851",
+      "name": "Vàng - nhắc trước tin (ForexFactory)",
+      "schedule": {
+        "kind": "interval",
+        "minutes": 30,
+        "display": "every 30m"
+      },
+      "enabled": true,
+      "script": "ff_remind.py",
+      "no_agent": true,
+      "deliver": "origin,telegram:<ALERT_XAU_TEST_CHAT_ID>,telegram:<KAIROS_LIVE_CHAT_ID>",
+      "prompt": "Nhac tin forex sap ra trong 60 phut toi (VANG, gio VN UTC+7). Nguon: fetch https://nfs.faireconomy.media/ff_calendar_thisweek.xml (gio GMT +7 = gio VN). Fallback https://www.forexfactory.com/calendar. Chi Impact High hoac Medium, uu tien USD. Chi bao tin gio VN trong [now+0p..now+60p]. Neu co tin, format tieng Viet, icon VUONG giong Forex Factory (High = red square, Medium = orange square), moi tin 2 dong: dong 1: [gio VN] [icon vuong] [Ten tin] | Du bao: X | Truoc: Y. Dong 2: bat dau bang icon robot roi den AI du doan: [Vang TANG/GIAM manh/nhe + ly do ngan]. Cuoi: canh bao giat manh + Khong phai khuyen nghi dau tu. Neu KHONG co tin: tra ve dung 1 dong NO_ALERT. Khong bia tin."
+    },
+    {
+      "id": "9a5ef58d5810",
+      "name": "XAU SELL guard (Hermes vận hành bot grid)",
+      "schedule": {
+        "kind": "interval",
+        "minutes": 5,
+        "display": "every 5m"
+      },
+      "enabled": true,
+      "script": "xau_guard.py",
+      "no_agent": true,
+      "deliver": "telegram:<ALERT_XAU_TEST_CHAT_ID>"
+    },
+    {
+      "id": "e90064b90867",
+      "name": "XAU báo cáo phân tích 1 giờ",
+      "schedule": {
+        "kind": "cron",
+        "expr": "1 * * * *",
+        "display": "1 * * * *"
+      },
+      "enabled": false,
+      "script": "xau_report.py",
+      "no_agent": false,
+      "deliver": "telegram:<ALERT_XAU_TEST_CHAT_ID>",
+      "prompt": "Bạn là chuyên gia phân tích thị trường vàng (XAUUSD) kiêm người vận hành bot GRID của anh Đông. Phía trên là DỮ LIỆU REALTIME vừa đọc trực tiếp từ MT5 (tài khoản Exness, symbol XAUUSDc, đơn vị tiền USC = cent) bởi script. Báo cáo chạy ở phút thứ 1 và 31 mỗi giờ, tức ngay sau khi nến H1, M30, M15 vừa đóng: chỉ báo các khung đó là của nến VỪA ĐÓNG, hãy nhận xét nến vừa đóng. Hệ thống tự động (script guard chạy mỗi 5 phút) đã quyết định BẬT/TẮT SELL của bot grid và trần SELL theo chỉ báo; dòng QUYET_DINH_SELL là quyết định đang áp dụng.\n\nNHIỆM VỤ: viết 1 bản báo cáo phân tích ngắn gọn bằng tiếng Việt gửi nhóm Telegram. CHỈ dùng số liệu trong dữ liệu trên, không bịa số, không tự tìm web, không thêm link/URL.\n\nNếu dữ liệu có dòng 'Hermes XAU engine lỗi' hoặc không có dữ liệu: chỉ trả lời 2 dòng: '⚠️ BÁO CÁO XAU: không đọc được dữ liệu MT5' + lỗi ngắn gọn.\n\nĐỊNH DẠNG (giữ đúng thứ tự, plain text, không markdown đậm/bảng):\n📊 BÁO CÁO XAU – HH:MM DD/MM\n💰 Giá: <bid> | Hôm nay: mở <..> cao <..> thấp <..>\n📈 Xu hướng: D1 <..> | H4 <..> | H1 <..> | M30 <..> | M15 <..>\n🔎 Chỉ báo: 2-3 dòng ngắn, nêu RSI H1/H4, ADX H4 (+DI/-DI), vị trí giá so với EMA và Bollinger, ATR ngày.\n🧱 Cản trên: <2 mức gần nhất từ đỉnh hôm qua/đỉnh 20 nến/BB trên/EMA> | Hỗ trợ: <2 mức>\n🤖 Bot SELL: BẬT/TẮT – <lý do> | Trần SELL: <..> | Đang mở: <n> lệnh, <lot> lot, P/L <..> USC\n   (thêm 1 dòng BUY: <n> lệnh, P/L nếu có lệnh)\n📰 Tin sắp tới: <liệt kê từ TIN_SAP_TOI, hoặc 'không có tin USD đỏ/cam trong 8h'>\n🧠 Nhận định: 2-3 câu như chuyên gia: kịch bản chính cho 30-60 phút tới, rủi ro cho grid SELL (giá tăng ngược) và mức giá cần chú ý; nếu điểm tăng gần ngưỡng TẮT thì cảnh báo trước.\n(Nếu có dòng KINH_NGHIEM_7_NGAY: thêm 1 dòng '📚 Kinh nghiệm: ...' tóm tắt các lần tắt SELL vừa qua có đúng không — giá tăng thêm nhiều sau khi tắt = tắt đúng.)\nNếu AlgoTrading: TAT thì thêm dòng '⚠️ MT5 đang tắt Algo Trading – bot và Hermes không vào/không điều khiển lệnh.'\n⚠️ Không phải khuyến nghị đầu tư.\n\nGiá làm tròn 2 chữ số. Toàn bộ dưới 25 dòng. Câu trả lời cuối của bạn chính là tin nhắn được gửi, không viết gì thêm ngoài bản báo cáo.",
+      "enabled_toolsets": [
+        "file"
+      ]
+    }
+  ]
+}
